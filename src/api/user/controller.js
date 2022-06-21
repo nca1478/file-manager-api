@@ -53,6 +53,40 @@ class UserController extends UserService {
             res.status(500).json(error);
         }
     }
+
+    async login(req, res) {
+        try {
+            const dataLogin = {
+                email: req.body.email,
+                password: req.body.password,
+            };
+            let result = await this.loginUser(dataLogin);
+            if (result) {
+                const data = {
+                    msg: "Login Successfully.",
+                    user: result,
+                    token: sendTokenUser(result),
+                };
+                const response = responsePOST(data);
+                return res.status(200).json(response);
+            } else {
+                if (result === null) {
+                    const error = responseError({
+                        msg: "The email doesn't exist or user is not active",
+                    });
+                    return res.status(404).json(error);
+                } else {
+                    const error = responseError({
+                        msg: "The combination of email and password does not exist",
+                    });
+                    return res.status(401).json(error);
+                }
+            }
+        } catch (err) {
+            const error = responseError([err]);
+            res.status(500).json(error);
+        }
+    }
 }
 
 export default UserController;

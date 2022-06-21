@@ -1,8 +1,9 @@
 // Validate Data
-import { createUserValidation } from "./validateData";
+import { createUserValidation, loginUserValidation } from "./validateData";
 
 // Helpers
 import { showValErrors } from "../../middlewares/showValErrors";
+import { verifyToken } from "../../helpers/jwtHandler";
 
 class UserRouter {
     constructor(router, controller) {
@@ -30,7 +31,18 @@ class UserRouter {
         );
 
         // Get Users
-        this.router.get("/", this.controller.findAll.bind(this.controller));
+        this.router.get(
+            "/",
+            [verifyToken],
+            this.controller.findAll.bind(this.controller)
+        );
+
+        // Login User
+        this.router.post(
+            "/login",
+            [loginUserValidation(), showValErrors],
+            this.controller.login.bind(this.controller)
+        );
     }
 
     setRoutes() {
