@@ -5,8 +5,11 @@ import chalk from "chalk";
 import cors from "cors";
 import fileUpload from "express-fileupload";
 
-// Debugging utility
+// Api Debugging Messages
 const debug = require("debug")("interviewApp:DB");
+
+// Api Routes
+import { userRoutes } from "../api/user";
 
 // DB Connection and Associations
 import sequelize from "../db/connection";
@@ -16,13 +19,13 @@ class Server {
         this.app = express();
         this.port = process.env.PORT;
 
-        // Settings App
+        // Api Settings
         this.middlewares();
-        // this.routes()
+        this.routes();
     }
 
     middlewares() {
-        // Cors Access
+        // Enable Cors
         this.app.use(cors());
         this.app.use(
             logger(
@@ -34,10 +37,10 @@ class Server {
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: false }));
 
-        // Static Files
+        // Enable Static Files
         this.app.use(express.static("public"));
 
-        // Fileupload
+        // Enable Express Fileupload
         this.app.use(
             fileUpload({
                 useTempFiles: true,
@@ -45,6 +48,10 @@ class Server {
                 createParentPath: true,
             })
         );
+    }
+
+    routes() {
+        this.app.use("/api/v1/users", userRoutes);
     }
 
     listen() {
