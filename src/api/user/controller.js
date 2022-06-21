@@ -2,7 +2,12 @@
 import bcrypt from "bcryptjs";
 
 // Helpers
-import { responseError, responsePOST } from "../../helpers/response";
+import {
+    responseError,
+    responseGET,
+    responsePOST,
+} from "../../helpers/response";
+import { paginate } from "../../helpers/pagination";
 import { sendTokenUser } from "../../helpers/sendToken";
 
 // Service Class
@@ -28,6 +33,21 @@ class UserController extends UserService {
                 token: sendTokenUser(result),
             });
             return res.status(201).json(response);
+        } catch (err) {
+            const error = responseError([err]);
+            res.status(500).json(error);
+        }
+    }
+
+    async findAll(req, res) {
+        const page = req.query.page ? req.query.page : 1;
+        const limit = req.query.limit ? req.query.limit : 4;
+
+        try {
+            const paginationData = paginate(page, limit);
+            const result = await this.findUsers(paginationData);
+            const response = responseGET(paginationData.pagination, result);
+            return res.status(200).json(response);
         } catch (err) {
             const error = responseError([err]);
             res.status(500).json(error);

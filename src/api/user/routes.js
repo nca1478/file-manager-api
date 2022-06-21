@@ -28,6 +28,9 @@ class UserRouter {
             [createUserValidation(), showValErrors],
             this.controller.create.bind(this.controller)
         );
+
+        // Get Users
+        this.router.get("/", this.controller.findAll.bind(this.controller));
     }
 
     setRoutes() {

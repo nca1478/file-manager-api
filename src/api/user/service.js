@@ -1,4 +1,5 @@
-// Dependencies
+// Queries
+import { queryUsersList } from "./queries";
 
 class UserService {
     constructor(dependenciesData) {
@@ -19,6 +20,12 @@ class UserService {
         } catch (err) {
             throw err;
         }
+    }
+
+    async findUsers(paginationData) {
+        const { limit, skip } = paginationData;
+        const query = queryUsersList(limit, skip);
+        return await this.user.findAndCountAll(query);
     }
 }
 
