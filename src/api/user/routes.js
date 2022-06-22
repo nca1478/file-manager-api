@@ -1,5 +1,9 @@
 // Validate Data
-import { createUserValidation, loginUserValidation } from "./validateData";
+import {
+    createUserValidation,
+    loginUserValidation,
+    loginGoogleValidation,
+} from "./validateData";
 
 // Helpers
 import { showValErrors } from "../../middlewares/showValErrors";
@@ -42,6 +46,13 @@ class UserRouter {
             "/login",
             [loginUserValidation(), showValErrors],
             this.controller.login.bind(this.controller)
+        );
+
+        // Login Google
+        this.router.post(
+            "/google",
+            [loginGoogleValidation(), showValErrors],
+            this.controller.google.bind(this.controller)
         );
     }
 

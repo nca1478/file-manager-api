@@ -7,7 +7,74 @@
         <title>InterviewApp</title>
     </head>
     <body>
-        <h1>InterviewApp - API v1.0.0</h1>
+        <h1>InterviewApp v1.0 - Login</h1>
         <hr />
+
+        <!-- Botón Google Signin -->
+        <div
+            id="g_id_onload"
+            data-client_id="699491018053-fp028891qo97uot8sbqj0m5quonbmges.apps.googleusercontent.com"
+            data-auto_prompt="false"
+            data-callback="handleCredentialResponse"
+        ></div>
+        <div
+            class="g_id_signin"
+            data-type="standard"
+            data-size="large"
+            data-theme="outline"
+            data-text="sign_in_with"
+            data-shape="rectangular"
+            data-logo_alignment="left"
+        ></div>
+
+        <br />
+        <!-- Botón Google Signout -->
+        <button id="google_signout">Signout</button>
+
+        <script
+            src="https://accounts.google.com/gsi/client"
+            async
+            defer
+        ></script>
+
+        <script>
+            function handleCredentialResponse(response) {
+                // Google Token o ID Token
+                // console.log("tokenId:", response.credential);
+
+                // Fetch a backend
+                const body = { tokenId: response.credential };
+
+                var url = window.location.hostname.includes("localhost")
+                    ? "http://localhost:4000/api/v1/users/google"
+                    : "http://api-en-la-nube.com/api/v1/users/google";
+
+                fetch(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(body),
+                })
+                    .then((resp) => resp.json())
+                    .then((resp) => {
+                        localStorage.setItem("email", resp.data.user.email);
+                        location.reload();
+                    })
+                    .catch(console.warn);
+            }
+
+            const button = document.getElementById("google_signout");
+            button.onclick = () => {
+                google.accounts.id.disableAutoSelect();
+                google.accounts.id.revoke(
+                    localStorage.getItem("email"),
+                    (done) => {
+                        localStorage.clear();
+                        location.reload();
+                    }
+                );
+            };
+        </script>
     </body>
 </html>

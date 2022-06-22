@@ -1,6 +1,9 @@
 // Dependencies
 import bcrypt from "bcryptjs";
 
+// Helpers
+import { googleVerify } from "../../helpers/googleVerify";
+
 // Queries
 import { queryUsersList } from "./queries";
 
@@ -59,6 +62,32 @@ class UserService {
                 }
             } else {
                 return user;
+            }
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async loginGoogle(tokenId) {
+        try {
+            const { email, name } = await googleVerify(tokenId);
+            const user = await this.user.findOne({ where: { email } });
+            if (!user) {
+                const userInfo = {
+                    name,
+                    email,
+                    password: ":P",
+                    google: true,
+                };
+                const result = await this.user.create(userInfo);
+                return result;
+            } else {
+                if (user.active) {
+                    const userInfo = this.setUserInfo(user);
+                    return userInfo;
+                } else {
+                    return null;
+                }
             }
         } catch (err) {
             throw err;
