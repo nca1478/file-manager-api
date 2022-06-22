@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>InterviewApp</title>
+    </head>
+    <body>
+        <h1>Cambiar Contraseña</h1>
+        <hr />
+
+        <input type="text" id="email" placeholder="Ingrese Email" /><br />
+        <input
+            type="password"
+            id="newpassword"
+            placeholder="Ingrese Password"
+        /><br />
+        <input
+            type="button"
+            id="change_pass"
+            value="Cambiar Password"
+            style="margin-top: 2px"
+        />
+    </body>
+
+    <script>
+        const button = document.getElementById("change_pass");
+
+        button.onclick = () => {
+            // Obtener el token de la url
+            const params = window.location.search;
+            const urlParams = new URLSearchParams(params);
+            let token = urlParams.get("token");
+
+            // Obtener datos del formulario
+            const email = document.getElementById("email");
+            const newPassword = document.getElementById("newpassword");
+            const body = { email: email.value, newPassword: newPassword.value };
+
+            // Url API
+            var url = window.location.hostname.includes("localhost")
+                ? "http://localhost:4000/api/v1/users/recovery" + "/" + token
+                : "http://api-en-la-nube.com/api/v1/users/recovery";
+
+            // Hacer fetch a la API
+            fetch(url, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(body),
+            })
+                .then((resp) => resp.json())
+                .then((resp) => {
+                    alert(resp.data.msg);
+                })
+                .catch(console.warn);
+        };
+    </script>
+</html>

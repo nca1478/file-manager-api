@@ -6,7 +6,7 @@ import cors from "cors";
 import fileUpload from "express-fileupload";
 
 // Api Debugging Messages
-const debug = require("debug")("interviewApp:DB");
+const debug = require("debug")("filesManagerApp:DB");
 
 // Api Routes
 import { userRoutes } from "../api/user";
@@ -59,7 +59,7 @@ class Server {
         this.app.listen(port, () => {
             console.log(
                 `${chalk.yellow(
-                    "[interviewApp:API]"
+                    "[filesManagerApp:API]"
                 )} Listening on port ${port}`
             );
         });
@@ -72,7 +72,7 @@ class Server {
                 debug("Database connection succesfully");
                 console.log(
                     `${chalk.yellow(
-                        "[interviewApp:DB]"
+                        "[filesManagerApp:DB]"
                     )} Database connection succesfully`
                 );
             })
@@ -80,7 +80,7 @@ class Server {
                 console.log(error);
                 console.log(
                     `${chalk.red(
-                        "[interviewApp:DB]"
+                        "[filesManagerApp:DB]"
                     )} Database connection error ${error}`
                 );
             });
