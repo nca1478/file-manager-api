@@ -53,4 +53,23 @@ const loginGoogleValidation = () => {
     ];
 };
 
-export { createUserValidation, loginUserValidation, loginGoogleValidation };
+/**
+ * Validate body request of login user endpoint (POST /users/recovery)
+ * @return	{Array}		Rules of validation (express-validator)
+ */
+const emailRecoveryValidation = () => {
+    return [
+        check("email").exists().withMessage("Email is required"),
+        check("email")
+            .isEmail()
+            .normalizeEmail()
+            .withMessage("Must be valid email"),
+    ];
+};
+
+export {
+    createUserValidation,
+    loginUserValidation,
+    loginGoogleValidation,
+    emailRecoveryValidation,
+};

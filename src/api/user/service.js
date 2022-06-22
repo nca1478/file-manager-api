@@ -3,9 +3,11 @@ import bcrypt from "bcryptjs";
 
 // Helpers
 import { googleVerify } from "../../helpers/googleVerify";
+import { recoveryToken } from "../../helpers/sendToken";
+import { forgotPass } from "../../helpers/mail";
 
 // Queries
-import { queryUsersList } from "./queries";
+import { querySendEmailRecovery, queryUsersList } from "./queries";
 
 class UserService {
     constructor(dependenciesData) {
@@ -88,6 +90,26 @@ class UserService {
                 } else {
                     return null;
                 }
+            }
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async sendEmailRecoveryPass(email) {
+        const query = querySendEmailRecovery(email);
+        try {
+            const user = await this.user.findOne(query);
+            if (user) {
+                const tokenRecovery = recoveryToken(email);
+                let result = await this.user.update(
+                    { tokenRecovery },
+                    { where: { email, active: true } }
+                );
+                const responseEmail = await forgotPass(email, tokenRecovery);
+                return responseEmail;
+            } else {
+                return user;
             }
         } catch (err) {
             throw err;

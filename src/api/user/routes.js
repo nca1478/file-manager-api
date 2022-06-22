@@ -3,6 +3,7 @@ import {
     createUserValidation,
     loginUserValidation,
     loginGoogleValidation,
+    emailRecoveryValidation,
 } from "./validateData";
 
 // Helpers
@@ -53,6 +54,13 @@ class UserRouter {
             "/google",
             [loginGoogleValidation(), showValErrors],
             this.controller.google.bind(this.controller)
+        );
+
+        // Send Email to Recover Password
+        this.router.put(
+            "/recovery",
+            [emailRecoveryValidation(), showValErrors],
+            this.controller.sendEmailRecovery.bind(this.controller)
         );
     }
 

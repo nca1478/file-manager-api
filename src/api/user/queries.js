@@ -9,4 +9,14 @@ const queryUsersList = (limit, skip) => {
     };
 };
 
-export { queryUsersList };
+const querySendEmailRecovery = (email) => {
+    return {
+        where: {
+            email,
+            active: true,
+            google: false,
+        },
+    };
+};
+
+export { queryUsersList, querySendEmailRecovery };
