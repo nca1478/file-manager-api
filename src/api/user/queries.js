@@ -19,4 +19,10 @@ const querySendEmailRecovery = (email) => {
     };
 };
 
-export { queryUsersList, querySendEmailRecovery };
+const queryRecoveryPassword = (email, token) => {
+    return {
+        where: { email, tokenRecovery: token, active: true },
+    };
+};
+
+export { queryUsersList, querySendEmailRecovery, queryRecoveryPassword };

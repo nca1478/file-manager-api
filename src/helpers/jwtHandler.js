@@ -23,4 +23,33 @@ let verifyToken = (req, res, next) => {
     }
 };
 
-export { verifyToken };
+let accountToken = (req, res, next) => {
+    jwt.verify(req.params.token, tokenConfig.secret, (err, decoded) => {
+        if (err) {
+            if (err.message === "jwt expired") {
+                const errorExpired = {
+                    msg: "Recovery password token has expired, try again.",
+                };
+                res.status(401).json(responseError([errorExpired]));
+            } else {
+                const errorToken = {
+                    msg: err.message,
+                };
+                res.status(401).json(responseError([errorToken]));
+            }
+        } else {
+            if (req.url.indexOf("recovery") >= 0) {
+                if (!decoded.isRecovery) {
+                    const errorInvalid = {
+                        msg: "Invalid Token",
+                    };
+                    return res.status(401).json(responseError([errorInvalid]));
+                }
+            }
+            req.body = Object.assign(decoded, req.body);
+            next();
+        }
+    });
+};
+
+export { verifyToken, accountToken };

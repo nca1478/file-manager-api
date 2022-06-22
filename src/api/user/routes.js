@@ -4,11 +4,12 @@ import {
     loginUserValidation,
     loginGoogleValidation,
     emailRecoveryValidation,
+    recoveryPassValidation,
 } from "./validateData";
 
 // Helpers
 import { showValErrors } from "../../middlewares/showValErrors";
-import { verifyToken } from "../../helpers/jwtHandler";
+import { accountToken, verifyToken } from "../../helpers/jwtHandler";
 
 class UserRouter {
     constructor(router, controller) {
@@ -61,6 +62,13 @@ class UserRouter {
             "/recovery",
             [emailRecoveryValidation(), showValErrors],
             this.controller.sendEmailRecovery.bind(this.controller)
+        );
+
+        // Recover password
+        this.router.put(
+            "/recovery/:token",
+            [recoveryPassValidation(), accountToken, showValErrors],
+            this.controller.recoveryPass.bind(this.controller)
         );
     }
 

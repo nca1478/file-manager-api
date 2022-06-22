@@ -4,10 +4,14 @@ import bcrypt from "bcryptjs";
 // Helpers
 import { googleVerify } from "../../helpers/googleVerify";
 import { recoveryToken } from "../../helpers/sendToken";
-import { forgotPass } from "../../helpers/mail";
+import { forgotPass, passChanged } from "../../helpers/mail";
 
 // Queries
-import { querySendEmailRecovery, queryUsersList } from "./queries";
+import {
+    queryRecoveryPassword,
+    querySendEmailRecovery,
+    queryUsersList,
+} from "./queries";
 
 class UserService {
     constructor(dependenciesData) {
@@ -108,6 +112,28 @@ class UserService {
                 );
                 const responseEmail = await forgotPass(email, tokenRecovery);
                 return responseEmail;
+            } else {
+                return user;
+            }
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    async recoveryPassword({ email, password, token }) {
+        const query = queryRecoveryPassword(email, token);
+        try {
+            let user = await this.user.findOne(query);
+            if (user) {
+                let newPassword = bcrypt.hashSync(password);
+                let userResponse = await this.user.update(
+                    { password: newPassword, tokenRecovery: null },
+                    { where: { email, active: true } }
+                );
+                if (userResponse) {
+                    const responseEmail = await passChanged(email);
+                    return responseEmail;
+                }
             } else {
                 return user;
             }
