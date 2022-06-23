@@ -33,6 +33,13 @@ class ImageRouter {
             [verifyToken],
             this.controller.findAll.bind(this.controller)
         );
+
+        // Show Image by id
+        this.router.get(
+            "/:id",
+            [verifyToken],
+            this.controller.findById.bind(this.controller)
+        );
     }
 
     setRoutes() {

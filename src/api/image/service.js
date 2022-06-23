@@ -60,6 +60,12 @@ class ImageService {
         const query = queryImagesList(this.user, userId, limit, skip);
         return await this.image.findAndCountAll(query);
     }
+
+    async findImageById(id) {
+        return this.image.findOne({
+            where: { id },
+        });
+    }
 }
 
 export default ImageService;
