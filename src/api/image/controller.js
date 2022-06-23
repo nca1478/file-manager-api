@@ -1,3 +1,6 @@
+// Dependencies
+import axios from "axios";
+
 // Helpers
 import { paginate } from "../../helpers/pagination";
 import {
@@ -62,6 +65,19 @@ class ImageController extends ImageService {
             const id = req.params.id;
             const result = await this.findImageById(id);
             const response = responseGET(null, result);
+            return res.status(200).json(response);
+        } catch (err) {
+            const error = responseError([err]);
+            res.status(500).json(error);
+        }
+    }
+
+    async search(req, res) {
+        try {
+            const search = req.query.q;
+            const urlUnsplash = `https://api.unsplash.com/search/photos?page=1&per_page=5&query=${search}&client_id=${process.env.UNSPLASH_ACCESS_KEY}`;
+            const responseUnsplash = await axios.get(urlUnsplash);
+            const response = responseGET(null, responseUnsplash.data.results);
             return res.status(200).json(response);
         } catch (err) {
             const error = responseError([err]);

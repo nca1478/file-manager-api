@@ -27,6 +27,12 @@ class ImageRouter {
             this.controller.upload.bind(this.controller)
         );
 
+        // Search Images
+        this.router.get(
+            "/search",
+            this.controller.search.bind(this.controller)
+        );
+
         // Show List User Images
         this.router.get(
             "/",
