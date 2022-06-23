@@ -39,7 +39,7 @@
         <script>
             function handleCredentialResponse(response) {
                 // Google Token o ID Token
-                // console.log("tokenId:", response.credential);
+                console.log("tokenId:", response.credential);
 
                 // Fetch a backend
                 const body = { tokenId: response.credential };
@@ -58,7 +58,7 @@
                     .then((resp) => resp.json())
                     .then((resp) => {
                         localStorage.setItem("email", resp.data.user.email);
-                        location.reload();
+                        // location.reload();
                     })
                     .catch(console.warn);
             }

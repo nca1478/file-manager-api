@@ -1,4 +1,5 @@
 // Helpers
+import { paginate } from "../../helpers/pagination";
 import {
     responseError,
     responseGET,
@@ -34,6 +35,22 @@ class ImageController extends ImageService {
                 });
                 return res.status(400).json(error);
             }
+        } catch (err) {
+            const error = responseError([err]);
+            res.status(500).json(error);
+        }
+    }
+
+    async findAll(req, res) {
+        const page = req.query.page ? req.query.page : 1;
+        const limit = req.query.limit ? req.query.limit : 4;
+        const userId = req.user.id;
+
+        try {
+            const paginationData = paginate(page, limit);
+            const result = await this.findImages(paginationData, userId);
+            const response = responseGET(paginationData.pagination, result);
+            return res.status(200).json(response);
         } catch (err) {
             const error = responseError([err]);
             res.status(500).json(error);

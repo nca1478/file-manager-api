@@ -26,6 +26,13 @@ class ImageRouter {
             [verifyToken, showValErrors],
             this.controller.upload.bind(this.controller)
         );
+
+        // Show List User Images
+        this.router.get(
+            "/",
+            [verifyToken],
+            this.controller.findAll.bind(this.controller)
+        );
     }
 
     setRoutes() {

@@ -6,6 +6,9 @@ cloudinary.config(process.env.CLOUDINARY_URL);
 // Helpers
 import { verifyFiles } from "../../helpers/verifyFiles";
 
+// Queries
+import { queryImagesList } from "./queries";
+
 class ImageService {
     constructor(dependenciesData) {
         this.error = new Error();
@@ -15,6 +18,13 @@ class ImageService {
             throw this.error.dependencyError;
         } else {
             this.image = dependenciesData.image;
+        }
+
+        if (!dependenciesData.user) {
+            this.error.dependencyError = "User Model is undefined";
+            throw this.error.dependencyError;
+        } else {
+            this.user = dependenciesData.user;
         }
     }
 
@@ -43,6 +53,12 @@ class ImageService {
         } else {
             return false;
         }
+    }
+
+    async findImages(paginationData, userId) {
+        const { limit, skip } = paginationData;
+        const query = queryImagesList(this.user, userId, limit, skip);
+        return await this.image.findAndCountAll(query);
     }
 }
 
