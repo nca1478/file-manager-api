@@ -10,9 +10,11 @@ const debug = require("debug")("filesManagerApp:DB");
 
 // Api Routes
 import { userRoutes } from "../api/user";
+import { imageRoutes } from "../api/image";
 
 // DB Connection and Associations
 import sequelize from "../db/connection";
+require("../db/associations");
 
 class Server {
     constructor() {
@@ -52,6 +54,7 @@ class Server {
 
     routes() {
         this.app.use("/api/v1/users", userRoutes);
+        this.app.use("/api/v1/images", imageRoutes);
     }
 
     listen() {
