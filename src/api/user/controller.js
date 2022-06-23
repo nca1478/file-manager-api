@@ -28,7 +28,7 @@ class UserController extends UserService {
             };
             const result = await this.createUser(dataUser);
             const response = responsePOST({
-                msg: "Create Successfully.",
+                msg: "Usuario creado exitosamente.",
                 user: result,
                 token: sendTokenUser(result),
             });
@@ -63,7 +63,7 @@ class UserController extends UserService {
             let result = await this.loginUser(dataLogin);
             if (result) {
                 const data = {
-                    msg: "Login Successfully.",
+                    msg: "Login exitoso.",
                     user: result,
                     token: sendTokenUser(result),
                 };
@@ -72,12 +72,12 @@ class UserController extends UserService {
             } else {
                 if (result === null) {
                     const error = responseError({
-                        msg: "The email doesn't exist or user is not active",
+                        msg: "Email no existe o usuario no está activo",
                     });
                     return res.status(404).json(error);
                 } else {
                     const error = responseError({
-                        msg: "The combination of email and password does not exist",
+                        msg: "Combinación de email y password no coincide",
                     });
                     return res.status(401).json(error);
                 }
@@ -94,7 +94,7 @@ class UserController extends UserService {
             let result = await this.loginGoogle(tokenId);
             if (result) {
                 const data = {
-                    msg: "Google Login Successfully.",
+                    msg: "Login de Google exitoso",
                     user: result,
                     token: sendTokenUser(result),
                 };
@@ -102,7 +102,7 @@ class UserController extends UserService {
                 return res.status(200).json(response);
             } else {
                 const error = responseError({
-                    msg: "User is not active",
+                    msg: "Usuario no está activo",
                 });
                 return res.status(404).json(error);
             }
@@ -118,14 +118,14 @@ class UserController extends UserService {
             let result = await this.sendEmailRecoveryPass(email);
             if (result) {
                 const data = {
-                    msg: "Email sended succesfully.",
+                    msg: "Email enviado exitosamente",
                     messageId: result.messageId,
                 };
                 const response = responsePOST(data);
                 return res.status(200).json(response);
             } else {
                 const error = responseError({
-                    msg: "Email not found or not allowed to change password",
+                    msg: "Email no encontrado o no habilitado para cambiar contraseña",
                 });
                 return res.status(401).json(error);
             }
@@ -146,20 +146,20 @@ class UserController extends UserService {
             if (result) {
                 if (result.accepted[0].length > 0) {
                     const dataResponse = {
-                        msg: "Password changed succesfully.",
+                        msg: "Contraseña cambiada exitosamente",
                         messageId: result.messageId,
                     };
                     const response = responsePOST(dataResponse);
                     return res.status(200).json(response);
                 } else {
                     const error = responseError({
-                        msg: "Error recover password. Try again.",
+                        msg: "Error recuperando contraseña. Intente nuevamente",
                     });
                     return res.status(400).json(error);
                 }
             } else {
                 const error = responseError({
-                    msg: "Error recovering password. Token is not correct or User not found.",
+                    msg: "Error recuperando contraseña. Token no es correcto o usuario no encontrado",
                 });
                 return res.status(400).json(error);
             }

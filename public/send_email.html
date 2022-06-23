@@ -33,24 +33,39 @@
             const email = document.getElementById("email");
             const body = { email: email.value };
 
-            // Url API
-            var url = window.location.hostname.includes("localhost")
-                ? "http://localhost:4000/api/v1/users/recovery"
-                : "http://api-en-la-nube.com/api/v1/users/recovery";
+            if (email.value !== "") {
+                // Url API
+                var url = window.location.hostname.includes("localhost")
+                    ? "http://localhost:4000/api/v1/users/recovery"
+                    : "http://api-en-la-nube.com/api/v1/users/recovery";
+                button.disabled = true;
 
-            // Hacer fetch a la API
-            fetch(url, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(body),
-            })
-                .then((resp) => resp.json())
-                .then((resp) => {
-                    alert(resp.data.msg);
+                // Hacer fetch a la API
+                fetch(url, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(body),
                 })
-                .catch(console.warn);
+                    .then((resp) => resp.json())
+                    .then((resp) => {
+                        if (resp.data) {
+                            alert(resp.data.msg);
+                        } else {
+                            alert(resp.errors.msg);
+                        }
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
+                    .finally(() => {
+                        button.disabled = false;
+                        email.value = "";
+                    });
+            } else {
+                alert("Debe ingresar un email");
+            }
         };
     </script>
 </html>

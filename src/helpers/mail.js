@@ -2,26 +2,26 @@
 import nodemailer from "nodemailer";
 
 const forgotPass = (email, token) => {
-    const subject = "Recover your password";
+    const subject = "Recuperar tu contraseña";
     const urlClient = process.env.URL_CLIENT;
     const urlRedirect = `${urlClient}/recover_pass.html?token=${token}`;
     const templateHTML = `
-		<h1>Password reset instructions</h1>
+		<h1>Instrucciones para restablecer la contraseña</h1>
         <p>
-            We received a request to reset the password. This link is valid for the next 24 hours: &nbsp;
-            <a href="${urlRedirect}">Recover Password</a>
+            Recibimos una solicitud para restablecer la contraseña. Este enlace es válido durante las próximas 24 horas. &nbsp;
+            <a href="${urlRedirect}">Recuperar contraseña</a>
         </p>        		
 	`;
     return sendMailInfo(email, subject, templateHTML);
 };
 
 const passChanged = (email) => {
-    const subject = "Password changed successfully";
+    const subject = "Contraseña cambiada exitosamente";
     const urlClient = process.env.URL_CLIENT;
     const templateHTML = `
-		<h1>Password changed successfully</h1>
+		<h1>Contraseña cambiada exitosamente</h1>
         <p>
-            Now you can login into the app. <a href="${urlClient}">Go to App</a>            
+            Ahora puedes iniciar sesión en la aplicación. <a href="${urlClient}">Ir a la Aplicación</a>            
         </p>        		
 	`;
     return sendMailInfo(email, subject, templateHTML);
@@ -42,7 +42,7 @@ const sendMailInfo = async (to, subject, templateHTML) => {
     });
 
     const info = await transporter.sendMail({
-        from: `Interview App <${process.env.EMAIL_AUTH_USER}>`,
+        from: `FilesManager App <${process.env.EMAIL_AUTH_USER}>`,
         to,
         subject,
         html: templateHTML,

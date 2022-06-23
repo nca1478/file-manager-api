@@ -7,5 +7,5 @@ import Image from "../api/image/model";
 // ---------------- hasMany (1:M) & belongsTo (1:1) -------------------
 
 // User-Offer / Offer-User
-User.hasMany(Image, { as: "images", foreignKey: "userId" });
-Image.belongsTo(User, { as: "user", foreignKey: "userId" });
+User.hasMany(Image, { as: "images", foreignKey: "userId", constraints: false });
+Image.belongsTo(User, { as: "user", foreignKey: "userId", constraints: false });

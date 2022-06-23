@@ -28,13 +28,13 @@ class ImageController extends ImageService {
             const result = await this.uploadImage(dataUpload);
             if (result !== false) {
                 const response = responsePOST({
-                    msg: "Image uploaded successfully.",
+                    msg: "Image subida exitosamente.",
                     url: result,
                 });
                 return res.status(200).json(response);
             } else {
                 const error = responseError({
-                    msg: `Only ${dataUpload.validExtensions} file extensions are accepted.`,
+                    msg: `Solo estas extensiones son aceptadas: ${dataUpload.validExtensions}.`,
                 });
                 return res.status(400).json(error);
             }
@@ -54,17 +54,16 @@ class ImageController extends ImageService {
             const result = await this.uploadRemoteImage(dataUpload);
             if (result !== false) {
                 const response = responsePOST({
-                    msg: "Image uploaded successfully.",
+                    msg: "Image subida exitosamente.",
                     url: result,
                 });
                 return res.status(200).json(response);
             } else {
                 const error = responseError({
-                    msg: `Only ${dataUpload.validExtensions} file extensions are accepted.`,
+                    msg: `Solo estas extensiones son aceptadas: ${dataUpload.validExtensions}.`,
                 });
                 return res.status(400).json(error);
             }
-            return res.status(400).json(url);
         } catch (err) {
             const error = responseError([err]);
             res.status(500).json(error);
