@@ -27,6 +27,13 @@ class ImageRouter {
             this.controller.upload.bind(this.controller)
         );
 
+        // Upload Remote Image
+        this.router.post(
+            "/upload-remote",
+            [verifyToken, showValErrors],
+            this.controller.uploadRemote.bind(this.controller)
+        );
+
         // Search Images
         this.router.get(
             "/search",

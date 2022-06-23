@@ -44,6 +44,33 @@ class ImageController extends ImageService {
         }
     }
 
+    async uploadRemote(req, res) {
+        try {
+            const dataUpload = {
+                userId: req.user.id,
+                url: req.body.url,
+                validExtensions: ["jpg", "jpeg", "png"],
+            };
+            const result = await this.uploadRemoteImage(dataUpload);
+            if (result !== false) {
+                const response = responsePOST({
+                    msg: "Image uploaded successfully.",
+                    url: result,
+                });
+                return res.status(200).json(response);
+            } else {
+                const error = responseError({
+                    msg: `Only ${dataUpload.validExtensions} file extensions are accepted.`,
+                });
+                return res.status(400).json(error);
+            }
+            return res.status(400).json(url);
+        } catch (err) {
+            const error = responseError([err]);
+            res.status(500).json(error);
+        }
+    }
+
     async findAll(req, res) {
         const page = req.query.page ? req.query.page : 1;
         const limit = req.query.limit ? req.query.limit : 4;

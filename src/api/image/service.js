@@ -4,10 +4,11 @@ const cloudinary = require("cloudinary").v2;
 cloudinary.config(process.env.CLOUDINARY_URL);
 
 // Helpers
+import { getFilenameFromURL } from "../../helpers/utils";
 import { verifyFiles } from "../../helpers/verifyFiles";
 
 // Queries
-import { queryImagesList } from "./queries";
+import { queryGetImageById, queryImagesList } from "./queries";
 
 class ImageService {
     constructor(dependenciesData) {
@@ -37,15 +38,37 @@ class ImageService {
                 const { secure_url } = await cloudinary.uploader.upload(
                     tempFilePath
                 );
-                const url = secure_url.split("/");
-                const filename = url[url.length - 1];
+                const filenameCloudinary = getFilenameFromURL(secure_url);
 
                 await this.image.create({
-                    filename,
+                    filename: filenameCloudinary,
                     url: secure_url,
                     userId,
                 });
 
+                return secure_url;
+            } catch (err) {
+                throw err;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    async uploadRemoteImage(dataUpload) {
+        const { userId, url, validExtensions } = dataUpload;
+        const filename = getFilenameFromURL(url);
+        const verifyFile = verifyFiles({ name: filename }, validExtensions);
+        if (verifyFile) {
+            try {
+                const { secure_url } = await cloudinary.uploader.upload(url);
+                const filenameCloudinary = getFilenameFromURL(secure_url);
+
+                await this.image.create({
+                    filename: filenameCloudinary,
+                    url: secure_url,
+                    userId,
+                });
                 return secure_url;
             } catch (err) {
                 throw err;
@@ -62,9 +85,8 @@ class ImageService {
     }
 
     async findImageById(id) {
-        return this.image.findOne({
-            where: { id },
-        });
+        const query = queryGetImageById(this.user, id);
+        return this.image.findOne(query);
     }
 }
 

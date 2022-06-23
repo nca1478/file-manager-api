@@ -5,7 +5,6 @@ const queryImagesList = (user, userId, limit, skip) => {
         attributes: { exclude: ["userId"] },
         distinct: true,
         include: [
-            // User
             {
                 model: user,
                 as: "user",
@@ -18,4 +17,19 @@ const queryImagesList = (user, userId, limit, skip) => {
     };
 };
 
-export { queryImagesList };
+const queryGetImageById = (user, id) => {
+    return {
+        where: { id },
+        attributes: { exclude: ["userId"] },
+        include: [
+            {
+                model: user,
+                as: "user",
+                required: false,
+                attributes: ["id", "name"],
+            },
+        ],
+    };
+};
+
+export { queryImagesList, queryGetImageById };
