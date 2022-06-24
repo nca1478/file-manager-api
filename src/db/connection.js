@@ -1,26 +1,13 @@
 // Dependencies
 import Sequelize from "sequelize";
 
-// DB Connection Values
-import { config } from "../config/env";
-const { dbName, dbUser, dbPass, dbHost } = config;
+// Helpers
+import { localConnection, remoteConnection } from "../helpers/dbConnection";
 
-// DB Connection
-const sequelize = new Sequelize(dbName, dbUser, dbPass, {
-    host: dbHost,
-    dialect: "mysql",
-    pool: {
-        max: 10,
-        min: 0,
-        acquire: 30000,
-        idle: 10000,
-    },
-    logging: false,
-    dialectOptions: {
-        ssl: {
-            rejectUnauthorized: true,
-        },
-    },
-});
+// DB Connection (remote y local)
+const SSL = process.env.SSL == "true" ? true : false;
+const sequelize = SSL
+    ? remoteConnection(Sequelize)
+    : localConnection(Sequelize);
 
 module.exports = sequelize;

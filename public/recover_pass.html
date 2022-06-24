@@ -47,8 +47,9 @@
 
             // Url API
             var url = window.location.hostname.includes("localhost")
-                ? "http://localhost:4000/api/v1/users/recovery" + "/" + token
-                : "https://file-manager-api-2022.herokuapp.com/api/v1/users/recovery";
+                ? "http://localhost:4000/api/v1/users/recovery/" + token
+                : "https://file-manager-api-2022.herokuapp.com/api/v1/users/recovery/" +
+                  token;
 
             if (email.value === "") {
                 alert("Ingrese el email del usuario");
